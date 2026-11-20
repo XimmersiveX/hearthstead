@@ -222,7 +222,7 @@ html[data-look="table"] .btn.danger { background: var(--short-bg); color: var(--
   @container dock (max-height: 312px) {
     html[data-look="table"] #panelHead { flex-direction: row; width: auto; }
     html[data-look="table"] .tabs { width: 160px; }
-    html[data-look="table"] #railStats { width: 140px; border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: 8px; }
+    html[data-look="table"] #railStats { width: max-content; min-width: 140px; border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: 8px; }
   }
   html[data-look="table"] .tab-btn {
     display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
