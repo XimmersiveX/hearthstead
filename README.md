@@ -1,8 +1,38 @@
 # Hearthstead
 
+![Hearthstead: a late-game city with its wonder, temple, walls and market square](images/og-image.jpg)
+
 A 2D civilization clicker that runs in your browser, on desktop or phone. Grow a single tent into an empire: gather by hand, recruit citizens, put them to work, build, learn, worship, fight, trade and raise wonders.
 
-**Play it:** https://ximmersivex.github.io/hearthstead/
+### ▶ [Play Hearthstead](https://ximmersivex.github.io/hearthstead/)
+
+Free, no sign-up, and it works offline once loaded. You can install it as an app (see below).
+
+<p>
+  <img src="images/screenshot-desktop.jpg" alt="Desktop: resource bar, the village and the build table" width="68%">
+  &nbsp;
+  <img src="images/screenshot-phone.jpg" alt="Phone: resource chips, the village and the gather buttons" width="26%">
+</p>
+
+## Features
+
+- **A village that grows on screen.** The picture is drawn in code and changes with your population: camp, hamlet, village, town and city, with roads, a plaza, market stalls, walls, a temple and your wonders.
+- **The full classic idle-civ economy:** food, wood and stone, special finds (skins, herbs, ore), leather and metal workshops, storage caps, land, morale, sickness and burial.
+- **Jobs, upgrades and faith:** ten jobs, a tech tree, a deity with four domains, altars, blessings and prayers.
+- **War and trade:** wolves, bandits and barbarians, raids for land and plunder, travelling merchants, gold.
+- **Wonders and New Ages** for long-term play, plus achievements.
+- **Seasons** with seasonal looks, optional seasonal farming and choice events.
+- **Comfortable for long sessions:** six colour themes, four panel layouts (bottom, left, right, classic), a resizable panel, instant tooltips, sound and music made in code.
+- **Phone-friendly:** a drawer layout with big buttons and fast multi-tap gathering.
+- **Installable and offline:** a Progressive Web App with its own icon. Saves stay in your browser and keep working while you're away.
+
+## Install it as an app
+
+- **Android (Chrome):** open the play link, then tap **⋮ → Add to Home screen** (or **Install app**).
+- **iPhone / iPad (Safari):** open the play link, tap **Share**, then **Add to Home Screen**.
+- **Desktop (Chrome or Edge):** click the install icon at the right end of the address bar.
+
+The installed app opens full screen and plays offline. When online it always loads the newest version.
 
 The rules and numbers follow the classic CivClicker design closely (same population, food, jobs, buildings, upgrades, sickness, combat, trade, faith and wonder mechanics), with its own name, text and look.
 
@@ -41,6 +71,8 @@ All the numbers and names are in `js/data.js`. Edit, save, and refresh the page.
 | File | What it does |
 | --- | --- |
 | `index.html` | The page layout |
+| `manifest.json`, `sw.js`, `icons/` | App install details, offline support (service worker) and app icons. `icons/icon.svg` is the source drawing. |
+| `images/` | README screenshots and the link-preview image |
 | `css/style.css` | Look of the top bar, side panel and the phone drawer |
 | `css/look-table.css` | The newer controls layout: a table of tiles along the bottom. Switch in ☰ Menu → Controls layout. Drag the grip on the panel's top edge to resize it (double-click to reset). |
 | `js/data.js` | **Game content and balance** |
