@@ -2,14 +2,17 @@
 
 A 2D civilization clicker that runs in your browser, on desktop or phone. Grow a single tent into an empire: gather by hand, recruit citizens, put them to work, build, learn, worship, fight, trade and raise wonders.
 
+**Play it:** https://ximmersivex.github.io/hearthstead/
+
 The rules and numbers follow the classic CivClicker design closely (same population, food, jobs, buildings, upgrades, sickness, combat, trade, faith and wonder mechanics), with its own name, text and look.
+
+Inspired by [CivClicker](https://github.com/deathraygames/civ-clicker) by David Holley and its contributors. Hearthstead is a separate, from-scratch implementation and contains none of CivClicker's code, art or text.
 
 ## How to open it
 
 **Easiest:** double-click `index.html`. It opens in your browser and you can play. Nothing to install, no internet needed, no libraries.
 
-**On your phone:** serve the folder from your PC. Open a terminal in this folder and run `python -m http.server 8000` (or `npx serve`), then on your phone (same Wi-Fi) go to `http://YOUR-PC-IP:8000`. Or add it to the Game Portal as a local game (`C:\dev\games\hearthstead\index.html`).
-
+**On your phone:** serve the folder from your PC. Open a terminal in this folder and run `python -m http.server 8000` (or `npx serve`), then on your phone (same Wi-Fi) go to `http://YOUR-PC-IP:8000`.
 ## How to play
 
 - **Click** the fields, forest and quarry in the picture (or the Harvest / Chop / Quarry buttons, or keys **1 2 3**) to gather food, wood and stone. Each click has a 10% chance to also find **skins, herbs or ore**.
@@ -49,3 +52,7 @@ All the numbers and names are in `js/data.js`. Edit, save, and refresh the page.
 | `js/main.js` | Starts everything and runs the game loop (one tick per second) |
 
 Tip: open the browser console (F12) and type `game.state.res.food = 200` to cheat a little while testing.
+
+## License
+
+MIT, see [LICENSE](LICENSE). CivClicker itself is GPL-3.0; Hearthstead shares its game design but none of its code.
