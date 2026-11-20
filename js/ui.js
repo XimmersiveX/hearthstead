@@ -601,6 +601,43 @@
   function openModal(html, peek) { $('#modalBody').innerHTML = html; $('#modal').classList.toggle('peek', !!peek); $('#modal').classList.remove('hidden'); }
   function closeModal() { $('#modal').classList.add('hidden'); $('#modal').classList.remove('peek'); }
 
+  // ---------- installing as an app (js/install.js) ----------
+  async function installApp() {
+    if (Install.installed()) { toast('📲 Hearthstead is already installed.', 'good'); return; }
+    if (Install.canPrompt()) {
+      const r = await Install.prompt();
+      if (r === 'accepted') toast('📲 Installing Hearthstead. Look for it with your apps.', 'good', 5000);
+      return;
+    }
+    showInstallHelp();
+  }
+  function showInstallHelp() {
+    let steps;
+    if (Install.ios) steps = `<ol><li>Open this page in <b>Safari</b>.</li><li>Tap the <b>Share</b> button (the square with an arrow pointing up).</li><li>Scroll down and tap <b>Add to Home Screen</b>, then <b>Add</b>.</li></ol>`;
+    else if (Install.android) steps = `<ol><li>Open this page in <b>Chrome</b>.</li><li>Tap the <b>⋮</b> menu at the top right.</li><li>Tap <b>Install app</b> (on some phones it says <b>Add to Home screen</b>), then <b>Install</b>.</li></ol><p class="note">If neither shows up, reload the page once and try again.</p>`;
+    else steps = `<ol><li>In <b>Chrome</b> or <b>Edge</b>, click the install icon at the right end of the address bar,</li><li>or open the browser's <b>⋮</b> / <b>…</b> menu and choose <b>Install Hearthstead</b> (Chrome: <b>Cast, save and share → Install page as app</b>).</li></ol>`;
+    openModal(`<h2>📲 Install Hearthstead</h2><p>Install it to play full screen from your home screen, even offline. Your save stays the same.</p>${steps}<div class="row"><button class="btn" data-menu="close">Got it</button></div>`);
+  }
+  // A one-time hint on phones, after a minute of play.
+  function hideInstallHint() { const h = document.getElementById('installHint'); if (h) h.remove(); }
+  function scheduleInstallHint() {
+    let seen = false;
+    try { seen = !!localStorage.getItem('hearthstead.installHint'); } catch (e) { seen = true; }
+    if (seen || !window.Install || Install.installed() || !/^https?:$/.test(location.protocol)) return;
+    if (!window.matchMedia('(max-width: 800px), (pointer: coarse)').matches) return;
+    const show = () => {
+      if (Install.installed() || document.getElementById('installHint')) return;
+      if (!$('#modal').classList.contains('hidden')) { setTimeout(show, 10000); return; } // wait until no box is open
+      try { localStorage.setItem('hearthstead.installHint', 'shown'); } catch (e) { /* ignore */ }
+      const el = document.createElement('div');
+      el.id = 'installHint';
+      el.innerHTML = `<span>📲 Play full screen, even offline.</span><button class="btn small" data-menu="hintInstall">Install</button><button class="btn small ghost" data-menu="hintLater" aria-label="Not now">Not now</button>`;
+      el.addEventListener('click', e => { const b = e.target.closest('[data-menu]'); if (b) handleMenu(b.dataset.menu, b); });
+      document.body.appendChild(el);
+    };
+    setTimeout(show, 60000);
+  }
+
   function showMenu() {
     const canAge = Sim.canNewAge(state);
     openModal(`<h2>☰ Menu</h2><div class="menu-list">
@@ -613,6 +650,7 @@
       <button class="btn ghost" data-menu="theme">🖌️ Theme: ${(THEMES.find(x => x[0] === getTheme()) || THEMES[0])[1]}</button>
       <button class="btn ghost" data-menu="look">🎨 Controls layout: ${(LAYOUTS.find(x => x[0] === getLayout()) || LAYOUTS[0])[1]}</button>
       <button class="btn ghost" data-menu="pace">⏩ Game speed: ${paceLabel(state.pace)}</button>
+      ${window.Install && !Install.installed() ? '<button class="btn ghost" data-menu="install">📲 Install app</button>' : ''}
       <button class="btn ghost" data-menu="save">💾 Save now</button>
       <button class="btn ghost" data-menu="export">📤 Export save</button>
       <button class="btn ghost" data-menu="import">📥 Import save</button>
@@ -941,6 +979,9 @@
     switch (m) {
       case 'close': closeModal(); break;
       case 'help': showHelp(); break;
+      case 'install': closeModal(); installApp(); break;
+      case 'hintInstall': hideInstallHint(); installApp(); break;
+      case 'hintLater': hideInstallHint(); break;
       case 'ach': showAchievements(); break;
       case 'log': showLog(); break;
       case 'rename': showRename(); break;
@@ -1009,6 +1050,7 @@
       if (e.target.id === 'wonderName') handleAct({ dataset: { act: 'startWonder' } });
     });
     $('#menuBtn').addEventListener('click', showMenu);
+    scheduleInstallHint();
     $('#muteBtn').addEventListener('click', () => { actions.setSound({ mute: !state.sound.mute }); renderMute(); });
     $('#modal').addEventListener('change', e => {
       if (e.target.id === 'sndMute') { actions.setSound({ mute: e.target.checked }); renderMute(); }

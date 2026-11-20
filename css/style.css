@@ -379,3 +379,14 @@ select.textin { flex: none; }
 
 /* greyed-out buttons in cards pass clicks through to the card, so ui.js can flash what's missing */
 .card button[data-act]:disabled { pointer-events: none; }
+
+/* One-time "install the app" hint on phones (ui.js scheduleInstallHint) */
+#installHint {
+  position: fixed; left: 50%; transform: translateX(-50%);
+  top: calc(env(safe-area-inset-top) + 8px); width: min(94vw, 460px); z-index: 15;
+  display: flex; align-items: center; gap: 8px; padding: 8px 10px;
+  background: var(--panel-2); color: var(--text); border: 1px solid var(--accent);
+  border-radius: 12px; box-shadow: 0 8px 24px rgba(0, 0, 0, .45); font-size: 14px;
+}
+#installHint span { flex: 1; }
+#installHint .btn { flex: none; }
