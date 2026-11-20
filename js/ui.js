@@ -126,18 +126,32 @@
     const avail = body.clientHeight - top - 6 - frame - (titled ? titled.offsetHeight + 5 : 0);
     return Math.max(1, Math.min(8, Math.floor((avail + 5) / (tileH + 5))));
   }
-  function patchTab() {
-    const el = $('#tabBody');
+  // While the player is scrolling the panel (wheel, scrollbar drag, touch), hold off re-drawing it,
+  // so a re-draw never lands in the middle of a smooth scroll. It catches up a moment later.
+  let scrollingUntil = 0;
+  const panelScrolling = () => performance.now() < scrollingUntil;
+  function markScrolling() { scrollingUntil = performance.now() + 450; }
+  // Rows are re-fitted only when something that decides the fit changes (tab, layout, panel size,
+  // number of tiles), not every tick, so a tile growing a line (e.g. "Max (10)") can't reshuffle
+  // every section under the mouse.
+  let rowsKey = '';
+  function patchTab(force) {
+    const el = $('#tabBody'), body = $('#panelBody');
+    if (!force && panelScrolling()) return;
     const dock = dockMode();
     el.classList.toggle('docked', dock);
     for (let pass = 0; pass < 2; pass++) {
       const tmp = document.createElement('div');
       tmp.innerHTML = TABS[tab]();
       if (dock) { regroup(tmp); el.style.setProperty('--rows', dockRows); }
+      const top = body.scrollTop;
       morphChildren(el, tmp);
+      if (body.scrollTop !== top) body.scrollTop = top; // keep the player's place
       if (!dock || !wideScreen() || getDock() !== 'bottom') break; // row fitting only matters for the bottom panel
+      const key = [tab, getLook(), getDock(), body.clientWidth, body.clientHeight, el.querySelectorAll('.card').length, $('#hintCard').offsetHeight].join('|');
+      if (key === rowsKey) break;
       const r = measureRows();
-      if (r === dockRows) break;
+      if (r === dockRows) { rowsKey = key; break; }
       dockRows = r;
     }
   }
@@ -1035,9 +1049,9 @@
     state = s; actions = act;
     $('#panel').addEventListener('click', e => {
       const t = e.target.closest('[data-tab]');
-      if (t) { tab = t.dataset.tab; $('#panelBody').scrollTop = 0; refresh(); setDrawer(true); return; }
+      if (t) { tab = t.dataset.tab; $('#panelBody').scrollTop = 0; scrollingUntil = 0; refresh(); setDrawer(true); return; }
       const el = e.target.closest('[data-act]');
-      if (el && !el.disabled) handleAct(el);
+      if (el && !el.disabled) { scrollingUntil = 0; handleAct(el); } // a click shows its result right away
       else if (!el) nudgeDisabled(e);
     });
     $('#alerts').addEventListener('click', e => { const el = e.target.closest('[data-act]'); if (el && !el.disabled) handleAct(el); });
@@ -1050,6 +1064,8 @@
       if (e.target.id === 'wonderName') handleAct({ dataset: { act: 'startWonder' } });
     });
     $('#menuBtn').addEventListener('click', showMenu);
+    for (const ev of ['wheel', 'scroll', 'touchmove']) $('#panelBody').addEventListener(ev, markScrolling, { passive: true });
+    $('#panelBody').addEventListener('pointerdown', e => { if (e.target === $('#panelBody')) markScrolling(); }); // scrollbar drag
     scheduleInstallHint();
     $('#muteBtn').addEventListener('click', () => { actions.setSound({ mute: !state.sound.mute }); renderMute(); });
     $('#modal').addEventListener('change', e => {
