@@ -768,15 +768,28 @@
     const s = state, D = Sim.D;
     const total = Sim.pop(s).living;
     const want = Math.min(48, total);
-    // Decide how many of each job to show.
-    const counts = {};
+    // Decide how many of each job to show. Shares follow the square root of
+    // each job's headcount, so a huge farming workforce doesn't crowd the
+    // forest and quarry off the screen, and any staffed job is always seen.
+    const counts = {}, n = {}, w = {};
+    let wsum = 0;
+    for (const j of Sim.JOBS) {
+      n[j] = s.units[j] + (s.ill[j] || 0);
+      w[j] = Math.sqrt(n[j]);
+      wsum += w[j];
+    }
+    const MIN = { farmer: 3, woodcutter: 3, miner: 3 };
     let assigned = 0;
     for (const j of Sim.JOBS) {
-      const n = s.units[j] + (s.ill[j] || 0);
-      counts[j] = total > 0 ? Math.round((n / total) * want) : 0;
+      counts[j] = wsum > 0 ? Math.round((w[j] / wsum) * want) : 0;
+      if (n[j] > 0) counts[j] = Math.max(counts[j], Math.min(n[j], MIN[j] || 1));
       assigned += counts[j];
     }
-    while (assigned > want) { const j = Sim.JOBS.find(k => counts[k] > 0); counts[j]--; assigned--; }
+    // Trim any overshoot from the biggest groups first.
+    while (assigned > want) {
+      const j = Sim.JOBS.reduce((a, k) => (counts[k] > counts[a] ? k : a), Sim.JOBS[0]);
+      counts[j]--; assigned--;
+    }
     const have = {};
     for (const p of people) have[p.job] = (have[p.job] || 0) + 1;
     for (const j of Sim.JOBS) {
