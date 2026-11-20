@@ -87,7 +87,7 @@ input, select { font: inherit; }
 #civBlock { min-width: 120px; max-width: 200px; flex: none; }
 #civName { font-weight: 800; font-size: 16px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 #civSize { color: var(--muted); font-size: 12px; white-space: nowrap; }
-.chips { flex: 1; display: flex; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.chips { flex: 1; display: flex; gap: 5px; flex-wrap: wrap; min-width: 0; }
 .chip {
   display: flex; align-items: center; gap: 6px;
   background: var(--panel-2); border: 1px solid var(--line);
@@ -101,8 +101,13 @@ input, select { font: inherit; }
 .chip .rate.pos { color: var(--good); }
 .chip .rate.neg { color: var(--bad); }
 .chip .rate.flat { color: var(--muted); }
-/* the small chips keep a steady width as their numbers change */
-.chip:not(.big) .rate { min-width: 4.4em; }
+/* small chips: number above its rate, so more fit on one row; a steady width as numbers change */
+.chip:not(.big) { display: grid; grid-template-columns: auto 1fr; column-gap: 5px; align-items: center; padding: 3px 7px; }
+.chip:not(.big) .ico { grid-row: span 2; }
+.chip:not(.big) .num { line-height: 1.2; }
+.chip:not(.big) .rate { line-height: 1.2; min-width: 4.7em; white-space: nowrap; }
+.chip.norate .ico { grid-row: auto; }
+.chip.norate .num { min-width: 0; }
 .chip .bar { height: 3px; background: #0006; border-radius: 2px; overflow: hidden; margin-top: 2px; }
 .chip .bar i { display: block; height: 100%; width: 0; }
 .chip .col { display: flex; flex-direction: column; min-width: 0; flex: 1; }
@@ -142,6 +147,22 @@ input, select { font: inherit; }
 .gather .g-ico { font-size: 24px; line-height: 1.1; }
 .gather .g-txt { font-weight: 700; }
 .gather .g-amt { font-size: 11px; color: var(--muted); }
+/* desktop: a small ✕ beside the gather buttons hides them; a small 🌾🪵🪨 pill brings them back */
+.gather-tog {
+  align-self: center; flex: none; border-radius: 999px; cursor: pointer;
+  background: var(--panel-2); color: var(--muted); border: 1px solid var(--edge);
+  box-shadow: 0 2px 0 #0004; font-size: 12px; line-height: 1;
+}
+.gather-tog:hover { color: var(--text); border-color: var(--accent); background: var(--key-hover); }
+#gatherHide { width: 24px; height: 24px; padding: 0; opacity: .55; }
+#gatherBar:hover #gatherHide, #gatherHide:focus-visible { opacity: 1; }
+#gatherShow { display: none; padding: 5px 10px; font-size: 14px; letter-spacing: 2px; opacity: .8; }
+html[data-gather="hidden"] .gather, html[data-gather="hidden"] #gatherHide { display: none; }
+html[data-gather="hidden"] #gatherShow { display: block; }
+@media (max-width: 800px) {
+  .gather-tog, html[data-gather="hidden"] #gatherShow { display: none; }
+  html[data-gather="hidden"] .gather { display: flex; }
+}
 
 #logBox {
   height: 118px; background: var(--bg); border-top: 1px solid var(--line);

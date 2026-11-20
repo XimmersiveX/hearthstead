@@ -2,7 +2,7 @@
 // Network first: when online you always get the newest files (fetched past the HTTP cache),
 // and each fresh copy is stored. The stored copy is used only when the network fails or stalls.
 // Saves live in localStorage, which this worker never touches.
-const CACHE = 'hearthstead-v3';
+const CACHE = 'hearthstead-v5';
 const CORE = [
   './', 'index.html', 'manifest.json',
   'css/style.css', 'css/look-table.css', 'css/themes.css',
@@ -34,7 +34,11 @@ self.addEventListener('fetch', e => {
 
 async function networkFirst(req, e) {
   const cache = await caches.open(CACHE);
-  const net = fetch(req, { cache: 'no-cache' }).then(res => {
+  // A page navigation can't be copied with new options (the browser throws), so rebuild it from its URL.
+  const fresh = req.mode === 'navigate'
+    ? new Request(req.url, { cache: 'no-cache', credentials: 'same-origin', redirect: 'follow' })
+    : new Request(req, { cache: 'no-cache' });
+  const net = fetch(fresh).then(res => {
     if (res.ok && res.type === 'basic') e.waitUntil(cache.put(req, res.clone()));
     return res;
   });
