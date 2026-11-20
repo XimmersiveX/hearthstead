@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0f1020">
+  <title>Hearthstead</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/look-table.css">
+  <link rel="stylesheet" href="css/themes.css">
+  <script>
+    // Which control-panel layout to use: "table" (new) or "classic". Kept apart from the save.
+    try { document.documentElement.dataset.look = localStorage.getItem('hearthstead.look') === 'classic' ? 'classic' : 'table'; }
+    catch (e) { document.documentElement.dataset.look = 'table'; }
+    // Colour theme (Menu → Theme), also kept apart from the save. "portal" = the Games Portal colours.
+    try { document.documentElement.dataset.theme = localStorage.getItem('hearthstead.theme') || 'hearth'; }
+    catch (e) { document.documentElement.dataset.theme = 'hearth'; }
+    // Where the bottom-table panel sits on wide screens: bottom, left or right (Menu → Controls layout).
+    try { const d = localStorage.getItem('hearthstead.dock'); document.documentElement.dataset.dock = d === 'left' || d === 'right' ? d : 'bottom'; }
+    catch (e) { document.documentElement.dataset.dock = 'bottom'; }
+    try { const w = parseInt(localStorage.getItem('hearthstead.dockW'), 10); if (w > 0) document.documentElement.style.setProperty('--dock-w', w + 'px'); } catch (e) { /* ignore */ }
+    try { const h = parseInt(localStorage.getItem('hearthstead.dockH'), 10); if (h > 0) document.documentElement.style.setProperty('--dock-h', h + 'px'); } catch (e) { /* ignore */ }
+  </script>
+</head>
+<body>
+  <div id="app">
+    <header id="topbar">
+      <div id="civBlock">
+        <div id="civName"></div>
+        <div id="civSize"></div>
+        <div id="seasonTag"></div>
+      </div>
+      <div class="chips" id="resChips"></div>
+      <button id="muteBtn" class="icon-btn" aria-label="Mute sound" title="Sound on (click to mute)">🔊</button>
+      <button id="menuBtn" class="icon-btn" aria-label="Menu">☰</button>
+    </header>
+
+    <main id="main">
+      <div id="scene"></div>
+      <div id="alerts"></div>
+      <div id="toasts"></div>
+      <div id="gatherBar">
+        <button class="gather" data-res="food"><span class="g-ico">🌾</span><span class="g-txt">Harvest</span><span class="g-amt" id="gAmt-food"></span></button>
+        <button class="gather" data-res="wood"><span class="g-ico">🪵</span><span class="g-txt">Chop</span><span class="g-amt" id="gAmt-wood"></span></button>
+        <button class="gather" data-res="stone"><span class="g-ico">🪨</span><span class="g-txt">Quarry</span><span class="g-amt" id="gAmt-stone"></span></button>
+      </div>
+      <div id="logBox">
+        <div id="logHead">Chronicle</div>
+        <ul id="log"></ul>
+      </div>
+    </main>
+
+    <aside id="panel" class="open">
+      <div id="dockGrip" title="Drag to resize the panel. Double-click to reset."></div>
+      <div id="panelHead">
+        <div class="tabs" role="tablist" id="tabs"></div>
+        <div id="railStats" aria-label="Population"></div>
+        <button id="drawerToggle" class="icon-btn" aria-label="Show or hide panel">▾</button>
+      </div>
+      <div id="panelBody">
+        <div id="hintCard"></div>
+        <div id="tabBody"></div>
+      </div>
+    </aside>
+  </div>
+
+  <div id="modal" class="hidden">
+    <div class="modal-card">
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/sim.js"></script>
+  <script src="js/seasons.js"></script>
+  <script src="js/scene.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>

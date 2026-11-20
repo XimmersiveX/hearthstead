@@ -1,0 +1,23 @@
+# Private notes, kept on disk only
+IDEAS.md
+
+# Backups and scratch
+backup/
+*.bak
+*.orig
+*.tmp
+screenshots/
+*.png.tmp
+
+# Editors and OS
+.vscode/
+.idea/
+.claude/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Tooling (in case any gets added later)
+node_modules/
+*.log

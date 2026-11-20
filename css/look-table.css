@@ -1,0 +1,447 @@
+/* =====================================================================
+   "Table" look: the control panel becomes a wide table along the bottom
+   with a tab rail on the left and compact tiles laid out in columns.
+   Everything here only applies when <html data-look="table">.
+   Menu → Controls layout switches back to classic.
+   Drag the grip on the panel's top edge to resize it (double-click resets).
+   Colours come from theme variables (css/style.css :root and css/themes.css),
+   so Menu → Theme can swap them live. No colour is hard-coded below.
+   ===================================================================== */
+
+html[data-look="table"] body { background: var(--body-bg); }
+html[data-look="table"] #panel { color: var(--text); background: var(--panel); }
+
+/* tab rail: pills */
+html[data-look="table"] #panelHead { background: var(--rail); border-color: var(--line); }
+html[data-look="table"] .tab-btn {
+  color: var(--muted); border-color: var(--line); background: var(--panel); position: relative;
+}
+html[data-look="table"] .tab-btn:hover { color: var(--text); background: var(--panel-2); }
+html[data-look="table"] .tab-btn.active { background: var(--tab-on-bg); border-color: var(--tab-on-bg); color: var(--tab-on-text); }
+html[data-look="table"] .tab-btn .dot { background: var(--bad); box-shadow: 0 0 0 2px var(--rail); }
+
+html[data-look="table"] #panelBody { background: var(--panel); scrollbar-color: var(--edge) transparent; }
+
+/* ---------- tiles ---------- */
+html[data-look="table"] .card {
+  background: var(--panel-2); border: 1px solid var(--line); border-radius: 9px;
+  align-content: start;
+  padding: 4px 8px 6px; gap: 1px 8px; grid-template-columns: 26px 1fr auto;
+}
+html[data-look="table"] .card.job { grid-template-columns: 26px 1fr; }
+html[data-look="table"] .card.plain { display: block; }
+html[data-look="table"] .card .big { font-size: 19px; }
+html[data-look="table"] .card .name { font-size: 15px; line-height: 1.2; }
+html[data-look="table"] .card .name .owned {
+  display: inline-block; background: var(--owned-bg); color: var(--accent-2); border: 1px solid var(--owned-line);
+  border-radius: 999px; padding: 0 7px; font: 700 11.5px/15px system-ui, sans-serif;
+  vertical-align: 1px; margin-left: 6px;
+}
+html[data-look="table"] .card .name .owned:empty { display: none; }
+/* one-line descriptions; hover a description to read all of it */
+html[data-look="table"] .card .desc[title] {
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; font-size: 12px; cursor: help;
+}
+html[data-look="table"] .card .cost { font-size: 12px; gap: 4px; }
+html[data-look="table"] .card .effect { font-size: 12px; }
+html[data-look="table"] .card .acts { margin-top: 2px; gap: 4px; }
+html[data-look="table"] .cost span { background: var(--panel-3); color: var(--text); padding: 0 5px; }
+html[data-look="table"] .cost span.short { background: var(--short-bg); color: var(--short-text); }
+html[data-look="table"] .card.locked { opacity: .5; background: var(--panel); }
+
+/* Tiles you can act on right now get an accent edge; ones you can't afford sink back. */
+html[data-look="table"] .card:not(.job):not(.plain):has(.btn:not(.ghost):not(:disabled)) {
+  border-left: 4px solid var(--accent);
+}
+html[data-look="table"] .card:not(.job):not(.plain):has(.btn):not(:has(.btn:not(:disabled))) {
+  background: var(--dim-bg); border-color: var(--dim-line);
+}
+html[data-look="table"] .card:not(.job):not(.plain):has(.btn):not(:has(.btn:not(:disabled))) .big {
+  filter: grayscale(.7); opacity: .6;
+}
+html[data-look="table"] .card:not(.job):not(.plain):has(.btn):not(:has(.btn:not(:disabled))) .name { color: var(--dim-name); }
+html[data-look="table"] .card.plain[style*="--bad"] { background: var(--short-bg); }
+html[data-look="table"] .card.plain[style*="--bad"] .name { color: var(--short-text) !important; }
+
+/* ---------- buttons ---------- */
+html[data-look="table"] .btn {
+  background: var(--accent); color: var(--on-accent); box-shadow: 0 2px 0 var(--go-dark);
+  transition: transform .05s;
+}
+html[data-look="table"] .btn:hover:not(:disabled) { filter: brightness(1.1); }
+html[data-look="table"] .btn.small { min-height: 25px; padding: 1px 8px; font-size: 12.5px; border-radius: 7px; }
+html[data-look="table"] .btn:active:not(:disabled) { transform: translateY(1px); box-shadow: 0 1px 0 var(--go-dark); }
+html[data-look="table"] .btn:disabled { background: var(--btn-dis-bg); color: var(--btn-dis-text); box-shadow: none; }
+html[data-look="table"] .btn.ghost {
+  background: var(--key); border: 1px solid var(--edge); color: var(--text); box-shadow: none;
+}
+html[data-look="table"] .btn.ghost:hover:not(:disabled) { background: var(--key-hover); filter: none; }
+html[data-look="table"] .btn.ghost:disabled { background: transparent; color: var(--btn-dis-text); border-color: var(--panel-3); }
+
+html[data-look="table"] .stepper { margin-top: 3px; gap: 3px; }
+html[data-look="table"] .stepper button {
+  height: 25px; border-radius: 7px; font-size: 12.5px;
+  background: var(--panel-3); border: 1px solid var(--edge); color: var(--text);
+}
+html[data-look="table"] .stepper button:hover:not(:disabled) { background: var(--key-hover); border-color: var(--accent); }
+html[data-look="table"] .stepper .n { font-size: 16px; }
+html[data-look="table"] .stepper.s100 { grid-auto-rows: 25px; gap: 3px; }
+
+/* ---------- other bits ---------- */
+html[data-look="table"] .section-title {
+  font-size: 12px; letter-spacing: .1em; font-weight: 700;
+  color: var(--muted); border-bottom: 1px solid var(--line); padding-bottom: 1px;
+}
+html[data-look="table"] .stat { background: var(--panel-3); }
+html[data-look="table"] .stat .v { font-size: 15px; }
+html[data-look="table"] .progress { background: var(--bg); }
+html[data-look="table"] .textin { background: var(--bg); color: var(--text); border-color: var(--line); padding: 4px 8px; }
+html[data-look="table"] .textin:focus { outline: 2px solid var(--accent); border-color: transparent; }
+html[data-look="table"] .tag { background: var(--panel-3); }
+html[data-look="table"] #hintCard {
+  background: var(--hint-bg); border: 1px solid var(--hint-line);
+  color: var(--hint-text); padding: 5px 10px; margin-bottom: 8px; font-size: 12.5px;
+}
+html[data-look="table"] #hintCard b { color: var(--hint-strong); }
+
+/* ---------- top bar (same layout) ---------- */
+html[data-look="table"] #topbar { background: var(--topbar-bg); border-bottom: 1px solid var(--line); }
+html[data-look="table"] #civName { font-size: 18px; letter-spacing: -0.01em; }
+html[data-look="table"] .chip { background: var(--panel-2); border-color: var(--line); }
+html[data-look="table"] .chip .bar { background: var(--bg); }
+html[data-look="table"] .chip.full { border-color: var(--full-line); }
+html[data-look="table"] .chip.danger { border-color: var(--bad); background: var(--short-bg); }
+html[data-look="table"] .icon-btn { background: var(--panel-2); border-color: var(--line); }
+html[data-look="table"] .icon-btn:hover { background: var(--key-hover); }
+
+/* ---------- over the picture: gather buttons, chronicle, alerts, messages ---------- */
+html[data-look="table"] .gather {
+  background: var(--panel-2); border: 1px solid var(--edge); color: var(--text);
+  box-shadow: 0 2px 0 #0004;
+}
+html[data-look="table"] .gather:hover { background: var(--key-hover); border-color: var(--accent); }
+html[data-look="table"] .gather .g-txt { font-size: 15px; }
+html[data-look="table"] #logBox { background: var(--log-bg); border-color: var(--line); }
+html[data-look="table"] #log li { color: var(--text-2); }
+html[data-look="table"] #log li.good { color: var(--good); }
+html[data-look="table"] #log li.bad { color: var(--bad); }
+html[data-look="table"] #log li.warn { color: var(--warn); }
+html[data-look="table"] #log li .tm { color: var(--muted); opacity: .75; }
+html[data-look="table"] .alert {
+  background: var(--float-bg); border-color: var(--line); color: var(--text); box-shadow: 0 6px 18px #0007;
+}
+html[data-look="table"] .alert.bad { background: var(--short-bg); border-color: var(--bad); color: var(--short-text); }
+html[data-look="table"] .alert.gold { border-color: var(--accent); color: var(--text); }
+html[data-look="table"] .toast {
+  background: var(--float-bg); color: var(--text); border-left-width: 4px; box-shadow: 0 6px 18px #0007;
+}
+
+/* ---------- menus and pop-ups ---------- */
+html[data-look="table"] #modal { background: #0009; }
+html[data-look="table"] .modal-card {
+  background: var(--panel); border-color: var(--line); border-radius: 14px; box-shadow: 0 10px 30px #0008;
+}
+html[data-look="table"] .modal-card h2 { border-bottom: 1px solid var(--line); padding-bottom: 6px; letter-spacing: -0.01em; }
+html[data-look="table"] .modal-card p, html[data-look="table"] .modal-card li { color: var(--text-2); }
+html[data-look="table"] .modal-card .note { color: var(--muted); }
+html[data-look="table"] .modal-card textarea { background: var(--bg); border-color: var(--line); }
+html[data-look="table"] .modal-card .btn { min-height: 32px; }
+html[data-look="table"] .ach { background: var(--panel-2); }
+html[data-look="table"] .evt-choice { background: var(--panel-2); }
+html[data-look="table"] .btn.danger { background: var(--short-bg); color: var(--short-text); box-shadow: inset 0 0 0 1px var(--short-line); }
+
+/* =====================================================================
+   Layout for anything wider than a phone: panel along the bottom.
+   (Phones keep the pull-up drawer, with the new colours.)
+   ===================================================================== */
+@media (min-width: 801px) {
+  html[data-look="table"] #app {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr min(var(--dock-h, clamp(240px, 39vh, 356px)), 75vh);
+    grid-template-areas: "top" "main" "panel";
+  }
+  html[data-look="table"] #main { grid-template-rows: 1fr; }
+  html[data-look="table"] #gatherBar { bottom: 14px; }
+
+  /* Chronicle floats in the corner of the picture; hover to read more. */
+  html[data-look="table"] #logBox {
+    position: absolute; top: 10px; right: 10px; width: min(310px, 34%);
+    height: auto; max-height: 100px; z-index: 2;
+    border: 1px solid var(--line); border-radius: 10px; box-shadow: 0 6px 18px #0006;
+    transition: max-height .2s;
+  }
+  html[data-look="table"] #logBox:hover { max-height: 70%; background: var(--log-bg-solid); }
+
+  html[data-look="table"] #panel {
+    flex-direction: row; border-left: 0; border-top: 1px solid var(--line);
+    box-shadow: 0 -6px 18px #0006; position: relative;
+  }
+  /* grip for dragging the panel taller or shorter */
+  html[data-look="table"] #dockGrip {
+    display: block; position: absolute; left: 0; right: 0; top: -6px; height: 12px;
+    cursor: ns-resize; z-index: 6; touch-action: none;
+  }
+  html[data-look="table"] #dockGrip::after {
+    content: ""; position: absolute; left: 50%; top: 3px; width: 64px; height: 6px; margin-left: -32px;
+    border-radius: 3px; background: var(--edge); border: 1px solid var(--muted); opacity: .85;
+    transition: width .1s, margin .1s;
+  }
+  html[data-look="table"] #dockGrip:hover::after,
+  html[data-look="table"] #dockGrip.drag::after { opacity: 1; width: 96px; margin-left: -48px; background: var(--accent); border-color: var(--accent); }
+
+  /* rail: tabs in two columns, with the population stats always visible under them.
+     If the panel is dragged very short, the rail scrolls. */
+  html[data-look="table"] #panelHead {
+    flex: none; padding: 7px; border-bottom: 0; border-right: 1px solid var(--line);
+    flex-direction: column; align-items: stretch; gap: 8px; width: 174px;
+    overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--edge) transparent;
+  }
+  html[data-look="table"] .tabs {
+    display: grid; grid-template-columns: repeat(2, 1fr); grid-auto-rows: 40px;
+    gap: 4px; flex: none;
+  }
+  html[data-look="table"] #railStats {
+    display: flex; flex-direction: column; gap: 2px; flex: none;
+    border-top: 1px solid var(--line); padding-top: 6px;
+  }
+  html[data-look="table"] #railStats:empty { display: none; }
+  html[data-look="table"] .rs {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 6px;
+    padding: 1px 6px; border-radius: 6px; font-size: 12px; line-height: 18px; white-space: nowrap;
+  }
+  html[data-look="table"] .rs:nth-child(odd) { background: var(--panel); }
+  html[data-look="table"] .rs-k { color: var(--muted); }
+  html[data-look="table"] .rs-i { display: inline-block; width: 19px; font-size: 12px; }
+  html[data-look="table"] .rs b { font-variant-numeric: tabular-nums; color: var(--text); }
+  html[data-look="table"] .rs small { color: var(--muted); font-weight: 400; }
+  html[data-look="table"] .rs.hi b { color: var(--accent-2); }
+  html[data-look="table"] .rs.warn b { color: var(--warn); }
+  html[data-look="table"] .rs.bad b { color: var(--bad); }
+  /* When the panel is dragged short, the stats sit beside the tabs instead of under them. */
+  html[data-look="table"] #panel { container: dock / size; }
+  @container dock (max-height: 312px) {
+    html[data-look="table"] #panelHead { flex-direction: row; width: auto; }
+    html[data-look="table"] .tabs { width: 160px; }
+    html[data-look="table"] #railStats { width: 140px; border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: 8px; }
+  }
+  html[data-look="table"] .tab-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0;
+    padding: 0 4px; font-size: 11.5px; border-radius: 8px; line-height: 1.15;
+  }
+  html[data-look="table"] .tab-btn .t-ico { font-size: 16px; line-height: 1.15; }
+  html[data-look="table"] .tab-btn .dot { position: absolute; top: 4px; right: 6px; margin: 0; width: 8px; height: 8px; }
+
+  html[data-look="table"] #panelBody { padding: 8px 12px 8px; }
+  /* ---- sections side by side (ui.js wraps each section in .sec when this layout is on) ---- */
+}
+
+/* short stat labels are for the phone strip only */
+.rs-s { display: none; }
+
+/* ---- sections as framed trays (bottom panel, side panels and the phone drawer) ---- */
+  html[data-look="table"] #tabBody.docked {
+    display: flex; flex-wrap: wrap; align-items: flex-start; gap: 10px;
+  }
+  html[data-look="table"] #tabBody.docked .sec > * { margin-top: 0; margin-bottom: 0; min-width: 0; }
+  html[data-look="table"] #tabBody .card > * { min-width: 0; }
+
+  /* a block of tiles: fills downward (--rows, fitted to the panel height), then across */
+  html[data-look="table"] #tabBody.docked > .sec.cols {
+    flex: var(--cols) 1 calc(var(--cols) * 228px + (var(--cols) - 1) * 6px + 14px);
+    max-width: calc(var(--cols) * 330px + 14px);
+    /* each section is its own framed tray so Housing, Storage... read as separate groups */
+    background: var(--tray); border: 1px solid var(--tray-line); border-radius: 10px; padding: 4px 6px 6px;
+    border-top: 2px solid color-mix(in srgb, var(--sec, var(--tray-line)) 55%, transparent);
+    display: grid; grid-auto-flow: column; gap: 5px 6px;
+    grid-template-columns: repeat(var(--cols), minmax(0, 1fr));
+    grid-template-rows: auto repeat(var(--rows, 2), auto);
+  }
+  html[data-look="table"] #tabBody.docked > .sec.cols.notitle { grid-template-rows: repeat(var(--rows, 2), auto); }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .section-title {
+    grid-column: 1 / -1; grid-row: 1; gap: 12px;
+    color: var(--text-2); border-bottom-color: var(--tray-line); padding: 0 2px 3px;
+  }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .section-title > span:first-child::before {
+    content: ""; display: inline-block; width: 8px; height: 8px; border-radius: 2px; margin-right: 7px;
+    background: var(--sec, var(--accent)); vertical-align: 0;
+  }
+  html[data-look="table"] #tabBody.docked > .sec.cols[style*="--sec"] > .section-title > span:first-child { color: var(--sec); }
+  /* the marker becomes the section's icon, tinted in its colour */
+  html[data-look="table"] #tabBody.docked > .sec.cols[style*="--ico"] > .section-title > span:first-child::before {
+    width: 13px; height: 13px; border-radius: 0; vertical-align: -2px;
+    -webkit-mask: var(--ico) center / contain no-repeat; mask: var(--ico) center / contain no-repeat;
+  }
+  /* job tiles carry their group's colour on the left edge */
+  html[data-look="table"] #tabBody.docked > .sec.cols[style*="--sec"] > .card.job { border-left: 3px solid color-mix(in srgb, var(--sec) 75%, transparent); }
+  /* affordable tiles take their section's colour on the left edge, so neighbouring sections don't blend */
+  html[data-look="table"] #tabBody.docked > .sec.cols > .card:not(.job):not(.plain):has(.btn:not(.ghost):not(:disabled)) {
+    border-left-color: var(--sec, var(--accent));
+  }
+  html[data-look="table"] #tabBody.docked .section-title .carried { margin-left: auto; font-weight: 400; letter-spacing: .04em; }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .card:not(.job):not(.plain) .acts { grid-column: 1 / 4; }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .note { font-size: 12px; align-self: start; }
+
+  /* full-width strips: stats, notes, rows of buttons */
+  html[data-look="table"] #tabBody.docked > .sec.wide { flex: 0 0 100%; display: flex; flex-direction: column; gap: 4px; }
+  /* a strip that comes after tile blocks sits beside them when there is room */
+  html[data-look="table"] #tabBody.docked > .sec.cols ~ .sec.wide { flex: 1 1 320px; }
+  html[data-look="table"] #tabBody.docked > .sec.wide > .stat-grid { grid-template-columns: repeat(6, 1fr); gap: 5px; }
+  html[data-look="table"] #tabBody.docked > .sec.wide > .stat-grid .stat {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 6px;
+    padding: 2px 9px; border-radius: 7px; white-space: nowrap; overflow: hidden;
+  }
+  html[data-look="table"] #tabBody.docked > .sec.wide > .note { font-size: 12px; }
+
+
+/* =====================================================================
+   Side docking (Menu → Controls layout → Left side / Right side).
+   Same panel, standing up: tabs and stats on top, sections stacked
+   underneath and scrolling. The grip on the inner edge sets the width.
+   ===================================================================== */
+@media (min-width: 801px) {
+  html[data-look="table"][data-dock="left"] #app,
+  html[data-look="table"][data-dock="right"] #app {
+    grid-template-rows: auto 1fr;
+  }
+  html[data-look="table"][data-dock="left"] #app {
+    grid-template-columns: min(var(--dock-w, 480px), 60vw) 1fr;
+    grid-template-areas: "top top" "panel main";
+  }
+  html[data-look="table"][data-dock="right"] #app {
+    grid-template-columns: 1fr min(var(--dock-w, 480px), 60vw);
+    grid-template-areas: "top top" "main panel";
+  }
+  html[data-look="table"][data-dock="left"] #panel,
+  html[data-look="table"][data-dock="right"] #panel {
+    flex-direction: column; border-top: 0; min-width: 0;
+  }
+  html[data-look="table"][data-dock="left"] #panel { border-right: 1px solid var(--line); box-shadow: 6px 0 18px #0006; }
+  html[data-look="table"][data-dock="right"] #panel { border-left: 1px solid var(--line); box-shadow: -6px 0 18px #0006; }
+
+  /* grip: a vertical handle on the inner edge */
+  html[data-look="table"][data-dock="left"] #dockGrip,
+  html[data-look="table"][data-dock="right"] #dockGrip {
+    top: 0; bottom: 0; left: auto; right: auto; width: 12px; height: auto; cursor: ew-resize;
+  }
+  html[data-look="table"][data-dock="left"] #dockGrip { right: -6px; }
+  html[data-look="table"][data-dock="right"] #dockGrip { left: -6px; }
+  html[data-look="table"][data-dock="left"] #dockGrip::after,
+  html[data-look="table"][data-dock="right"] #dockGrip::after {
+    left: 3px; top: 50%; width: 6px; height: 64px; margin: -32px 0 0 0;
+  }
+  html[data-look="table"][data-dock="left"] #dockGrip:hover::after, html[data-look="table"][data-dock="left"] #dockGrip.drag::after,
+  html[data-look="table"][data-dock="right"] #dockGrip:hover::after, html[data-look="table"][data-dock="right"] #dockGrip.drag::after {
+    width: 6px; height: 96px; margin: -48px 0 0 0;
+  }
+
+  /* tabs and stats along the top of the panel */
+  html[data-look="table"][data-dock="left"] #panelHead,
+  html[data-look="table"][data-dock="right"] #panelHead {
+    width: auto; flex-direction: row; flex-wrap: wrap; align-items: flex-start; gap: 8px;
+    border-right: 0; border-bottom: 1px solid var(--line); overflow: visible;
+  }
+  html[data-look="table"][data-dock="left"] .tabs,
+  html[data-look="table"][data-dock="right"] .tabs {
+    flex: 1 1 240px; grid-template-columns: repeat(3, 1fr);
+  }
+  html[data-look="table"][data-dock="left"] #railStats,
+  html[data-look="table"][data-dock="right"] #railStats {
+    flex: 1 1 170px; border-top: 0; padding-top: 0; border-left: 1px solid var(--line); padding-left: 8px;
+    display: grid; grid-template-columns: 1fr; gap: 1px;
+  }
+
+  /* sections stack top to bottom; tiles flow in as many columns as fit */
+  html[data-look="table"][data-dock="left"] #tabBody.docked > .sec.cols,
+  html[data-look="table"][data-dock="right"] #tabBody.docked > .sec.cols {
+    flex: 1 1 100%; max-width: none;
+    grid-auto-flow: row; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-template-rows: none;
+  }
+  html[data-look="table"][data-dock="left"] #tabBody.docked > .sec.cols > .section-title,
+  html[data-look="table"][data-dock="right"] #tabBody.docked > .sec.cols > .section-title { grid-row: auto; }
+  html[data-look="table"][data-dock="left"] #tabBody.docked > .sec.wide,
+  html[data-look="table"][data-dock="right"] #tabBody.docked > .sec.wide { flex: 1 1 100%; }
+  html[data-look="table"][data-dock="left"] #tabBody.docked > .sec.wide > .stat-grid,
+  html[data-look="table"][data-dock="right"] #tabBody.docked > .sec.wide > .stat-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* =====================================================================
+   Phones: the pull-up drawer, made for thumbs. Full-width tiles, 40px+
+   buttons, the framed sections, and a compact stats strip under the tabs.
+   ===================================================================== */
+@media (max-width: 800px) {
+  /* top bar: population, food, wood and stone share the first row evenly; the rest wrap below */
+  /* exactly four big chips fill the first row, so a small chip (Skins) can never squeeze in beside them */
+  html[data-look="table"] .chip.big { flex: 1 1 calc(25% - 3px); min-width: 0; padding: 3px 6px; }
+  /* small chips: four to a row, number above its rate, so the bar stays two tidy rows and never jumps */
+  html[data-look="table"] .chip:not(.big) {
+    flex: 0 0 calc(25% - 3px); min-width: 0; padding: 2px 6px;
+    display: grid; grid-template-columns: auto 1fr; column-gap: 5px; align-items: center;
+  }
+  html[data-look="table"] .chip:not(.big) .ico { grid-row: span 2; }
+  html[data-look="table"] .chip:not(.big) .num { font-size: 13px; line-height: 1.15; }
+  html[data-look="table"] .chip:not(.big) .rate { min-width: 0; font-size: 10px; line-height: 1.15; white-space: nowrap; }
+  html[data-look="table"] .chip.big .num { font-size: 14px; }
+  html[data-look="table"] .chip.big .rate { font-size: 10.5px; }
+
+  /* drawer head: tabs, then the stats as a 4-across strip (icons + numbers; tap one for its name) */
+  html[data-look="table"] #panelHead { flex-wrap: wrap; row-gap: 6px; }
+  html[data-look="table"] #railStats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 3px 6px; flex: 0 0 100%; order: 3;
+    border-top: 1px solid var(--line); padding-top: 6px;
+  }
+  html[data-look="table"] #railStats:empty { display: none; }
+  html[data-look="table"] .rs {
+    display: flex; justify-content: space-between; align-items: baseline; gap: 4px;
+    padding: 1px 6px; border-radius: 6px; font-size: 12px; line-height: 18px; white-space: nowrap; background: var(--panel);
+    overflow: hidden;
+  }
+  html[data-look="table"] .rs-l { display: none; }
+  html[data-look="table"] .rs-s { display: inline; color: var(--muted); } /* short labels on phones: Pop., Land, Idle... */
+  html[data-look="table"] .rs .rs-i { width: auto; margin-right: 3px; }
+  html[data-look="table"] .rs:nth-child(-n+2) { grid-column: span 2; } /* population and land need room for "x / y" */
+  html[data-look="table"] .rs b { font-variant-numeric: tabular-nums; }
+  html[data-look="table"] .rs small { color: var(--muted); font-weight: 400; }
+  html[data-look="table"] .rs.hi b { color: var(--accent-2); }
+  html[data-look="table"] .rs.warn b { color: var(--warn); }
+  html[data-look="table"] .rs.bad b { color: var(--bad); }
+  /* tab bar: big buttons, about the size of Harvest / Chop / Quarry */
+  html[data-look="table"] .tab-btn {
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+    min-width: 80px; min-height: 60px; padding: 6px 10px; font-size: 14px; font-weight: 700; border-radius: 12px; position: relative;
+  }
+  html[data-look="table"] .tab-btn .t-ico { font-size: 22px; line-height: 1.1; }
+  html[data-look="table"] .tab-btn .dot { position: absolute; top: 6px; right: 8px; margin: 0; width: 9px; height: 9px; }
+  html[data-look="table"] #drawerToggle { width: 52px; height: 60px; font-size: 22px; border-radius: 12px; }
+  html[data-look="table"] #panelHead { align-items: center; }
+  /* the closed drawer shows the whole tab bar, and the gather buttons sit just above it */
+  html[data-look="table"] #panel:not(.open) { transform: translateY(calc(100% - 78px - env(safe-area-inset-bottom))); }
+  html[data-look="table"] body:not(.drawer-open) #main { padding-bottom: calc(78px + env(safe-area-inset-bottom)); }
+  html[data-look="table"] #civName { flex: none; max-width: 48%; }
+  html[data-look="table"] #civBlock { min-width: 0; overflow: hidden; white-space: nowrap; }
+
+  /* sections stack; tiles are full width (two across on wide phones / small tablets) */
+  html[data-look="table"] #tabBody.docked { display: flex; flex-direction: column; gap: 10px; }
+  html[data-look="table"] #tabBody.docked > .sec.cols {
+    flex: none; max-width: none; grid-auto-flow: row;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); grid-template-rows: none; gap: 6px;
+    padding: 6px 8px 8px;
+  }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .section-title { grid-row: auto; font-size: 13px; padding-bottom: 5px; }
+  html[data-look="table"] #tabBody.docked > .sec.cols > .section-title > span:first-child::before { width: 15px; height: 15px; vertical-align: -3px; }
+
+  /* tiles and buttons sized for thumbs */
+  html[data-look="table"] .card { padding: 8px 10px 10px; gap: 3px 10px; grid-template-columns: 32px 1fr auto; }
+  html[data-look="table"] .card.job { grid-template-columns: 32px 1fr; }
+  html[data-look="table"] .card .big { font-size: 24px; }
+  html[data-look="table"] .card .name { font-size: 16.5px; }
+  html[data-look="table"] .card .desc, html[data-look="table"] .card .desc[title] { font-size: 13.5px; white-space: normal; }
+  html[data-look="table"] .card .cost, html[data-look="table"] .card .effect { font-size: 13.5px; }
+  html[data-look="table"] .cost span { padding: 1px 7px; }
+  html[data-look="table"] .card .acts { grid-column: 1 / 4; display: flex; gap: 6px; margin-top: 6px; }
+  html[data-look="table"] .card .acts .btn { flex: 1 1 auto; }
+  html[data-look="table"] .btn, html[data-look="table"] .btn.small { min-height: 42px; font-size: 15px; border-radius: 9px; padding: 4px 10px; }
+  html[data-look="table"] .stepper { margin-top: 6px; gap: 6px; }
+  html[data-look="table"] .stepper.s100 { grid-auto-rows: 42px; gap: 6px; }
+  html[data-look="table"] .stepper button { height: auto; min-height: 42px; font-size: 15px; border-radius: 9px; }
+  html[data-look="table"] #hintCard { font-size: 13.5px; padding: 8px 12px; }
+}
