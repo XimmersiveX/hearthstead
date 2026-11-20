@@ -2,7 +2,7 @@
 // Network first: when online you always get the newest files (fetched past the HTTP cache),
 // and each fresh copy is stored. The stored copy is used only when the network fails or stalls.
 // Saves live in localStorage, which this worker never touches.
-const CACHE = 'hearthstead-v2';
+const CACHE = 'hearthstead-v3';
 const CORE = [
   './', 'index.html', 'manifest.json',
   'css/style.css', 'css/look-table.css', 'css/themes.css',
