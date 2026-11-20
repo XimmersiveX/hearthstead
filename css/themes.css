@@ -41,7 +41,7 @@ html[data-theme="slate"] {
   --scene-filter: brightness(.9) saturate(.88);
 }
 
-/* Hearth (the default since 2026-11-20, Ryan's pick): warm charcoal like a dim room by the fire, soft amber accent. Easiest at night. */
+/* Hearth (the default since 2026-11-20): warm charcoal like a dim room by the fire, soft amber accent. Easiest at night. */
 html[data-theme="hearth"] {
   --bg: #1e1c1a; --panel: #252220; --panel-2: #2d2a26; --panel-3: #37332e;
   --line: #3f3a34; --edge: #534c44;

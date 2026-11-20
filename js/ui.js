@@ -422,7 +422,7 @@
       html += `<div class="section-title"><span>Faith</span></div><p class="note">Priests in your shrines make faith ✨ and bury the dead in graveyards. Gather 1,000 faith to choose a deity.</p>`;
       if (Sim.upgradeVisible(s, 'worship')) html += upgradeCard('worship');
     } else if (!d.name) {
-      html += `<div class="section-title"><span>Name your deity</span></div><div class="card plain"><p class="note">Whom do your people worship?</p><div class="row"><input class="textin" id="deityName" maxlength="40" placeholder="${esc(s.rulerName)}">${btn('nameDeity', 'Worship', true)}</div>`
+      html += `<div class="section-title"><span>Name your deity</span></div><div class="card plain"><p class="note">Which god will your people follow?</p><div class="row"><input class="textin" id="deityName" maxlength="40" placeholder="${esc(s.rulerName)}">${btn('nameDeity', 'Worship', true)}</div>`
         + (s.deities.length > 1 ? `<p class="note">Choosing the name of an old deity brings back its domain for free.</p>` : '') + '</div>';
     } else if (!dom) {
       html += `<div class="section-title"><span>${esc(d.name)}</span></div><p class="note">Choose what ${esc(d.name)} is the god of. This costs ${D.deity.domainCost} ✨ and can't be changed this age.</p>`;
