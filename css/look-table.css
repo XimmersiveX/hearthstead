@@ -378,7 +378,7 @@ html[data-look="table"] .btn.danger { background: var(--short-bg); color: var(--
     display: grid; grid-template-columns: auto 1fr; column-gap: 5px; align-items: center;
   }
   html[data-look="table"] .chip:not(.big) .ico { grid-row: span 2; }
-  html[data-look="table"] .chip:not(.big) .num { font-size: 13px; line-height: 1.15; }
+  html[data-look="table"] .chip:not(.big) .num { font-size: 13px; line-height: 1.15; min-width: 0; }
   html[data-look="table"] .chip:not(.big) .rate { min-width: 0; font-size: 10px; line-height: 1.15; white-space: nowrap; }
   html[data-look="table"] .chip.big .num { font-size: 14px; }
   html[data-look="table"] .chip.big .rate { font-size: 10.5px; }

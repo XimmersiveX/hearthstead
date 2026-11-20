@@ -41,6 +41,8 @@
     // Where the bottom-table panel sits on wide screens: bottom, left or right (Menu → Controls layout).
     try { const d = localStorage.getItem('hearthstead.dock'); document.documentElement.dataset.dock = d === 'left' || d === 'right' ? d : 'bottom'; }
     catch (e) { document.documentElement.dataset.dock = 'bottom'; }
+    // Harvest / Chop / Quarry hidden on desktop (the ✕ beside them). Phones always show them.
+    try { if (localStorage.getItem('hearthstead.gather') === 'hidden') document.documentElement.dataset.gather = 'hidden'; } catch (e) { /* ignore */ }
     try { const w = parseInt(localStorage.getItem('hearthstead.dockW'), 10); if (w > 0) document.documentElement.style.setProperty('--dock-w', w + 'px'); } catch (e) { /* ignore */ }
     try { const h = parseInt(localStorage.getItem('hearthstead.dockH'), 10); if (h > 0) document.documentElement.style.setProperty('--dock-h', h + 'px'); } catch (e) { /* ignore */ }
   </script>
@@ -66,6 +68,8 @@
         <button class="gather" data-res="food"><span class="g-ico">🌾</span><span class="g-txt">Harvest</span><span class="g-amt" id="gAmt-food"></span></button>
         <button class="gather" data-res="wood"><span class="g-ico">🪵</span><span class="g-txt">Chop</span><span class="g-amt" id="gAmt-wood"></span></button>
         <button class="gather" data-res="stone"><span class="g-ico">🪨</span><span class="g-txt">Quarry</span><span class="g-amt" id="gAmt-stone"></span></button>
+        <button id="gatherHide" class="gather-tog" aria-label="Hide the gather buttons" data-tip="Hide these buttons" data-tip2="Keys 1, 2 and 3 still gather">✕</button>
+        <button id="gatherShow" class="gather-tog" aria-label="Show the gather buttons" data-tip="Show Harvest, Chop and Quarry" data-tip2="Keys 1, 2 and 3 gather too">🌾🪵🪨</button>
       </div>
       <div id="logBox">
         <div id="logHead">Chronicle</div>
@@ -105,6 +109,12 @@
     // Offline play (see sw.js). Only on http(s); updateViaCache 'none' makes the browser check sw.js itself every load.
     if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
       addEventListener('load', () => navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).catch(() => {}));
+      // When a new version's worker takes over a page an older worker served, reload once so the
+      // page and its scripts are from the same version (the game saves on unload).
+      if (navigator.serviceWorker.controller) {
+        let reloaded = false;
+        navigator.serviceWorker.addEventListener('controllerchange', () => { if (!reloaded) { reloaded = true; location.reload(); } });
+      }
     }
   </script>
 </body>

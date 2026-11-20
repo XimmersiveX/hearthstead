@@ -172,6 +172,7 @@
 
   // ---------- top bar ----------
   const SHOW_ALWAYS = ['food', 'wood', 'stone'];
+  const NO_RATE = ['gold']; // nothing makes these over time
   function renderChips() {
     const s = state, net = s._net || {};
     let html = '';
@@ -199,7 +200,9 @@
           + `<div class="line"><span class="rate ${rateCls}">${rateTxt || '&nbsp;'}</span></div>`
           + `<div class="bar"><i style="width:${pct}%;background:${R.color}"></i></div></div></div>`;
       } else {
-        html += `<div class="chip" ${tip}><span class="ico">${R.icon}</span><span class="num">${fmt(Math.floor(s.res[r]))}</span><span class="rate ${rateCls}">${rateTxt}</span></div>`;
+        // Gold only comes from trading and raids, never per second, so its chip has no rate line.
+        const norate = NO_RATE.includes(r);
+        html += `<div class="chip${norate ? ' norate' : ''}" ${tip}><span class="ico">${R.icon}</span><span class="num">${fmt(Math.floor(s.res[r]))}</span>${norate ? '' : `<span class="rate ${rateCls}">${rateTxt}</span>`}</div>`;
       }
     }
     patch($('#resChips'), html);

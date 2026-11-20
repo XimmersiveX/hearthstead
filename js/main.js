@@ -94,6 +94,14 @@
     const b = e.target.closest('[data-res]');
     if (b) gather(b.dataset.res);
   });
+  // Desktop: hide or show the gather buttons; remembered apart from the save.
+  function setGatherHidden(hide) {
+    if (hide) document.documentElement.dataset.gather = 'hidden'; else delete document.documentElement.dataset.gather;
+    try { if (hide) localStorage.setItem('hearthstead.gather', 'hidden'); else localStorage.removeItem('hearthstead.gather'); } catch (e) { /* ignore */ }
+  }
+  // (guarded: a page from an older version may not have these buttons yet)
+  document.getElementById('gatherHide')?.addEventListener('click', () => setGatherHidden(true));
+  document.getElementById('gatherShow')?.addEventListener('click', () => setGatherHidden(false));
   window.addEventListener('keydown', e => {
     if (e.target.matches('input, textarea, select')) return;
     if (e.key === 'Escape') UI.closeModal();
