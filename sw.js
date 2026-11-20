@@ -2,11 +2,11 @@
 // Network first: when online you always get the newest files (fetched past the HTTP cache),
 // and each fresh copy is stored. The stored copy is used only when the network fails or stalls.
 // Saves live in localStorage, which this worker never touches.
-const CACHE = 'hearthstead-v1';
+const CACHE = 'hearthstead-v2';
 const CORE = [
   './', 'index.html', 'manifest.json',
   'css/style.css', 'css/look-table.css', 'css/themes.css',
-  'js/data.js', 'js/sim.js', 'js/seasons.js', 'js/scene.js', 'js/ui.js', 'js/audio.js', 'js/main.js',
+  'js/data.js', 'js/install.js', 'js/sim.js', 'js/seasons.js', 'js/scene.js', 'js/ui.js', 'js/audio.js', 'js/main.js',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-192.png', 'icons/icon-maskable-512.png',
   'icons/apple-touch-icon.png', 'icons/favicon-32.png', 'icons/icon.svg',
 ];
