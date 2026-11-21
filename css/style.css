@@ -159,9 +159,15 @@ input, select { font: inherit; }
 #gatherShow { display: none; padding: 5px 10px; font-size: 14px; letter-spacing: 2px; opacity: .8; }
 html[data-gather="hidden"] .gather, html[data-gather="hidden"] #gatherHide { display: none; }
 html[data-gather="hidden"] #gatherShow { display: block; }
+/* phones: hidden, the gather bar's row shrinks to nothing so the village gets the space back,
+   and the pill sits over the village's bottom-right corner */
 @media (max-width: 800px) {
-  .gather-tog, html[data-gather="hidden"] #gatherShow { display: none; }
-  html[data-gather="hidden"] .gather { display: flex; }
+  #gatherHide { width: 30px; height: 30px; opacity: .7; }
+  html[data-gather="hidden"] #gatherBar {
+    height: 0; padding: 0; border: 0; background: none; overflow: visible;
+    justify-content: flex-end;
+  }
+  html[data-gather="hidden"] #gatherShow { position: relative; top: -44px; margin-right: 10px; padding: 7px 12px; opacity: .9; }
 }
 
 #logBox {
